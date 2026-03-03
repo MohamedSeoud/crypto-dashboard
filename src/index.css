@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-950 text-gray-100 antialiased m-0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-width: 320px;
+  }
+
+  * {
+    @apply border-gray-800;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-700 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-600;
+  }
+}
+
+@layer components {
+  .depth-bar-bid {
+    @apply absolute inset-y-0 right-0;
+    background: rgba(22, 199, 132, 0.12);
+  }
+
+  .depth-bar-ask {
+    @apply absolute inset-y-0 right-0;
+    background: rgba(234, 57, 67, 0.12);
+  }
+}
