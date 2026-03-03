@@ -101,6 +101,7 @@ interface CryptoContextValue {
   state: AppState;
   setPair: (pair: CryptoPair) => void;
   setStream: (stream: StreamType) => void;
+  clearError: () => void;
 }
 
 const CryptoContext = createContext<CryptoContextValue | null>(null);
@@ -202,9 +203,13 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: 'SET_STREAM', stream });
   }, []);
 
+  const clearError = useCallback(() => {
+    dispatch({ type: 'SET_ERROR', error: null });
+  }, []);
+
   const value = useMemo(
-    () => ({ state, setPair, setStream }),
-    [state, setPair, setStream],
+    () => ({ state, setPair, setStream, clearError }),
+    [state, setPair, setStream, clearError],
   );
 
   return <CryptoContext.Provider value={value}>{children}</CryptoContext.Provider>;

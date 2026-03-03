@@ -5,7 +5,7 @@ import { OrderBook } from './components/OrderBook';
 import { ErrorBanner } from './components/ErrorBanner';
 
 function Dashboard() {
-  const { state } = useCrypto();
+  const { state, clearError } = useCrypto();
   const {
     selectedPair,
     selectedStream,
@@ -26,7 +26,7 @@ function Dashboard() {
 
       <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-4 p-4">
         {error && (
-          <ErrorBanner message={error} onDismiss={() => {}} />
+          <ErrorBanner message={error} onDismiss={clearError} />
         )}
 
         <div
