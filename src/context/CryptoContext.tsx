@@ -152,12 +152,16 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
     onStatusChange: handleStatusChange,
   });
 
+  // Track candle cache in a ref to avoid re-triggering effect
+  const candleCacheRef = useRef(state.candleCache);
+  candleCacheRef.current = state.candleCache;
+
   // Fetch historical data via REST when pair changes
   useEffect(() => {
     const pair = state.selectedPair;
 
     // Fetch candles (skip if cached)
-    if (!state.candleCache[pair]) {
+    if (!candleCacheRef.current[pair]) {
       dispatch({ type: 'SET_LOADING_CANDLES', loading: true });
       fetchCandles(pair)
         .then((candles) => {
@@ -179,7 +183,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: 'SET_ERROR', error: `Failed to load order book: ${err.message}` });
         dispatch({ type: 'SET_LOADING_ORDER_BOOK', loading: false });
       });
-  }, [state.selectedPair, state.candleCache]);
+  }, [state.selectedPair]);
 
   // Subscribe to WebSocket when pair changes or connection is established
   useEffect(() => {
