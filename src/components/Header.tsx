@@ -9,7 +9,6 @@ export function Header() {
   return (
     <header className="border-b border-gray-800 bg-gray-900/80 backdrop-blur-sm">
       <div className="mx-auto flex max-w-screen-2xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        {/* Logo & Title */}
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
             <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,9 +21,7 @@ export function Header() {
           </div>
         </div>
 
-        {/* Selectors */}
         <div className="flex items-center gap-3">
-          {/* Pair selector */}
           <div className="flex flex-col gap-1">
             <label htmlFor="pair-select" className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
               Pair
@@ -43,7 +40,6 @@ export function Header() {
             </select>
           </div>
 
-          {/* Stream selector */}
           <div className="flex flex-col gap-1">
             <label htmlFor="stream-select" className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
               Stream

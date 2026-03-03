@@ -42,21 +42,17 @@ describe('OrderBook', () => {
 
   it('renders bid and ask prices', () => {
     render(<OrderBook orderBook={mockOrderBook} isLoading={false} pair="BTC-USDT" />);
-    // Check that bid prices are displayed
     expect(screen.getByText('45,000.00')).toBeInTheDocument();
-    // Check that ask prices are displayed
     expect(screen.getByText('45,001.00')).toBeInTheDocument();
   });
 
   it('calculates and displays mid-price correctly', () => {
     render(<OrderBook orderBook={mockOrderBook} isLoading={false} pair="BTC-USDT" />);
-    // Mid-price should be (45000 + 45001) / 2 = 45000.50
     expect(screen.getByText('45,000.50')).toBeInTheDocument();
   });
 
   it('displays spread information', () => {
     render(<OrderBook orderBook={mockOrderBook} isLoading={false} pair="BTC-USDT" />);
-    // Spread = 45001 - 45000 = 1.00
     expect(screen.getByText(/Spread/)).toBeInTheDocument();
   });
 });

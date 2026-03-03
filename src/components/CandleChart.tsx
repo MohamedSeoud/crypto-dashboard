@@ -33,7 +33,6 @@ export function CandleChart({ candles, isLoading, pair }: CandleChartProps) {
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
   const prevCandleLengthRef = useRef(0);
 
-  // Create chart on mount
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -76,7 +75,6 @@ export function CandleChart({ candles, isLoading, pair }: CandleChartProps) {
     chartRef.current = chart;
     seriesRef.current = series;
 
-    // Responsive resize
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
@@ -93,18 +91,15 @@ export function CandleChart({ candles, isLoading, pair }: CandleChartProps) {
     };
   }, []);
 
-  // Update data when candles change
   useEffect(() => {
     if (!seriesRef.current || candles.length === 0) return;
 
     const isAppend = candles.length > prevCandleLengthRef.current && prevCandleLengthRef.current > 0;
 
     if (isAppend) {
-      // Only update the last candle (real-time update)
       const lastCandle = candles[candles.length - 1];
       seriesRef.current.update(toChartData(lastCandle));
     } else {
-      // Full data reset (new pair selected)
       const chartData = candles.map(toChartData);
       seriesRef.current.setData(chartData);
       chartRef.current?.timeScale().fitContent();
@@ -113,7 +108,6 @@ export function CandleChart({ candles, isLoading, pair }: CandleChartProps) {
     prevCandleLengthRef.current = candles.length;
   }, [candles]);
 
-  // Reset length tracking when pair changes
   useEffect(() => {
     prevCandleLengthRef.current = 0;
   }, [pair]);

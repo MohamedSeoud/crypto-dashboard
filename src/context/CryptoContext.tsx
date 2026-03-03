@@ -18,8 +18,6 @@ import type {
   WSMessage,
 } from '../types';
 
-// ── Reducer ──────────────────────────────────────────────────
-
 const initialState: AppState = {
   selectedPair: 'BTC-USDT',
   selectedStream: 'all',
@@ -38,7 +36,6 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return {
         ...state,
         selectedPair: action.pair,
-        // Load cached candles if available, otherwise show loading
         currentCandles: state.candleCache[action.pair] ?? [],
         isLoadingCandles: !state.candleCache[action.pair],
         currentOrderBook: null,
@@ -95,8 +92,6 @@ function appReducer(state: AppState, action: AppAction): AppState {
   }
 }
 
-// ── Context ──────────────────────────────────────────────────
-
 interface CryptoContextValue {
   state: AppState;
   setPair: (pair: CryptoPair) => void;
@@ -106,13 +101,10 @@ interface CryptoContextValue {
 
 const CryptoContext = createContext<CryptoContextValue | null>(null);
 
-// ── Provider ─────────────────────────────────────────────────
-
 export function CryptoProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const prevPairRef = useRef<CryptoPair>(state.selectedPair);
 
-  // Stable callback refs to avoid re-creating the WebSocket
   const dispatchRef = useRef(dispatch);
   dispatchRef.current = dispatch;
   const stateRef = useRef(state);
@@ -121,10 +113,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
   const handleMessage = useCallback((message: WSMessage) => {
     switch (message.type) {
       case 'initial_candles':
-        // We primarily use REST API for initial data, but handle this as a fallback
-        break;
       case 'initial_orderbook':
-        // We primarily use REST API for initial data, but handle this as a fallback
         break;
       case 'candle_update':
         dispatchRef.current({ type: 'ADD_CANDLE', pair: message.pair, candle: message.data });
@@ -153,15 +142,12 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
     onStatusChange: handleStatusChange,
   });
 
-  // Track candle cache in a ref to avoid re-triggering effect
   const candleCacheRef = useRef(state.candleCache);
   candleCacheRef.current = state.candleCache;
 
-  // Fetch historical data via REST when pair changes
   useEffect(() => {
     const pair = state.selectedPair;
 
-    // Fetch candles (skip if cached)
     if (!candleCacheRef.current[pair]) {
       dispatch({ type: 'SET_LOADING_CANDLES', loading: true });
       fetchCandles(pair)
@@ -174,7 +160,6 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
         });
     }
 
-    // Always fetch fresh order book on pair change
     dispatch({ type: 'SET_LOADING_ORDER_BOOK', loading: true });
     fetchOrderBook(pair)
       .then((orderBook) => {
@@ -186,7 +171,6 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
       });
   }, [state.selectedPair]);
 
-  // Subscribe to WebSocket when pair changes or connection is established
   useEffect(() => {
     if (isConnected) {
       subscribe(state.selectedPair, 'all');
@@ -194,7 +178,6 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
     }
   }, [state.selectedPair, isConnected, subscribe]);
 
-  // Actions
   const setPair = useCallback((pair: CryptoPair) => {
     dispatch({ type: 'SET_PAIR', pair });
   }, []);
@@ -214,8 +197,6 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
 
   return <CryptoContext.Provider value={value}>{children}</CryptoContext.Provider>;
 }
-
-// ── Hook ─────────────────────────────────────────────────────
 
 export function useCrypto(): CryptoContextValue {
   const context = useContext(CryptoContext);

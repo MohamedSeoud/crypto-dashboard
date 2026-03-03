@@ -7,7 +7,18 @@ import type {
   WSMessage,
 } from '../types';
 
-const WS_URL = 'ws://localhost:3001';
+function getWebSocketUrl(): string {
+  if (import.meta.env.VITE_WS_URL) {
+    return import.meta.env.VITE_WS_URL;
+  }
+  if (import.meta.env.PROD) {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${protocol}//${window.location.host}/ws`;
+  }
+  return 'ws://localhost:3001';
+}
+
+const WS_URL = getWebSocketUrl();
 const RECONNECT_DELAY = 3000;
 const MAX_RECONNECT_ATTEMPTS = 5;
 
@@ -24,7 +35,6 @@ export function useWebSocket({ onMessage, onStatusChange }: UseWebSocketOptions)
   const [isConnected, setIsConnected] = useState(false);
 
   const connect = useCallback(() => {
-    // Clean up existing connection
     if (wsRef.current) {
       wsRef.current.close();
       wsRef.current = null;
@@ -39,7 +49,6 @@ export function useWebSocket({ onMessage, onStatusChange }: UseWebSocketOptions)
       onStatusChange('connected');
       setIsConnected(true);
 
-      // Re-subscribe if we had a previous subscription
       if (currentSubscriptionRef.current) {
         const msg: SubscribeMessage = {
           type: 'subscribe',
@@ -62,7 +71,6 @@ export function useWebSocket({ onMessage, onStatusChange }: UseWebSocketOptions)
       setIsConnected(false);
       onStatusChange('disconnected');
 
-      // Attempt reconnection
       if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
         reconnectAttemptsRef.current += 1;
         reconnectTimerRef.current = setTimeout(connect, RECONNECT_DELAY);
@@ -94,7 +102,6 @@ export function useWebSocket({ onMessage, onStatusChange }: UseWebSocketOptions)
     [],
   );
 
-  // Connect on mount, clean up on unmount
   useEffect(() => {
     connect();
 

@@ -92,6 +92,26 @@ npm run build     # TypeScript check + Vite build
 npm run preview   # Preview production build locally
 ```
 
+### 5. Docker (End-to-End)
+
+Run the full stack (backend + production frontend) with a single command:
+
+```bash
+docker compose up --build
+# Frontend:  http://localhost:8080
+# Backend:   http://localhost:3001
+```
+
+This starts:
+- **backend** — Node.js mock server on port 3001 with a health check
+- **frontend** — Production Vite build served by nginx on port 8080, proxying `/api` and `/ws` to the backend
+
+To stop:
+
+```bash
+docker compose down
+```
+
 ## Frontend Architecture
 
 ```

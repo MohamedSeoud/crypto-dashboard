@@ -1,8 +1,6 @@
-// ── Crypto Pairs ──────────────────────────────────────────────
 export const CRYPTO_PAIRS = ['BTC-USDT', 'ETH-USDT', 'XRP-USDT'] as const;
 export type CryptoPair = (typeof CRYPTO_PAIRS)[number];
 
-// ── Stream Types ─────────────────────────────────────────────
 export const STREAM_TYPES = ['all', 'candles', 'orderbook'] as const;
 export type StreamType = (typeof STREAM_TYPES)[number];
 
@@ -12,7 +10,6 @@ export const STREAM_LABELS: Record<StreamType, string> = {
   orderbook: 'Order Book Only',
 };
 
-// ── Candle Data ──────────────────────────────────────────────
 export interface Candle {
   timestamp: number;
   open: number;
@@ -22,7 +19,6 @@ export interface Candle {
   volume: number;
 }
 
-// ── Order Book ───────────────────────────────────────────────
 export interface OrderBookEntry {
   price: number;
   quantity: number;
@@ -33,7 +29,6 @@ export interface OrderBook {
   asks: OrderBookEntry[];
 }
 
-// ── WebSocket Messages ───────────────────────────────────────
 export interface SubscribeMessage {
   type: 'subscribe';
   pair: CryptoPair;
@@ -76,10 +71,8 @@ export type WSMessage =
   | OrderBookUpdateMessage
   | ErrorMessage;
 
-// ── Connection State ─────────────────────────────────────────
 export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
 
-// ── App State ────────────────────────────────────────────────
 export interface AppState {
   selectedPair: CryptoPair;
   selectedStream: StreamType;

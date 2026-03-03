@@ -77,7 +77,7 @@ export function OrderBook({ orderBook, isLoading, pair }: OrderBookProps) {
     const spPercent = mid > 0 ? ((sp / mid) * 100).toFixed(3) : '0.000';
 
     return {
-      asks: asksWithTotal.slice().reverse(), // Show highest ask at top
+      asks: asksWithTotal.slice().reverse(),
       bids: bidsWithTotal,
       maxAskTotal: maxAsk,
       maxBidTotal: maxBid,
@@ -106,21 +106,18 @@ export function OrderBook({ orderBook, isLoading, pair }: OrderBookProps) {
         </div>
       ) : (
         <div className="flex flex-1 flex-col overflow-hidden">
-          {/* Column headers */}
           <div className="flex items-center px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
             <span className="w-1/3 text-right">Price (USDT)</span>
             <span className="w-1/3 text-right">Amount</span>
             <span className="w-1/3 text-right">Total</span>
           </div>
 
-          {/* Asks (sell orders) - reversed so lowest ask is closest to mid-price */}
           <div className="flex-1 overflow-y-auto">
             {asks.map((entry, i) => (
               <OrderRow key={`ask-${i}`} entry={entry} maxTotal={maxAskTotal} side="ask" />
             ))}
           </div>
 
-          {/* Mid-price */}
           <div className="flex items-center justify-center gap-3 border-y border-gray-700 bg-gray-800/50 px-3 py-2">
             <span className="text-lg font-bold text-white">
               {formatPrice(midPrice)}
@@ -130,7 +127,6 @@ export function OrderBook({ orderBook, isLoading, pair }: OrderBookProps) {
             </span>
           </div>
 
-          {/* Bids (buy orders) */}
           <div className="flex-1 overflow-y-auto">
             {bids.map((entry, i) => (
               <OrderRow key={`bid-${i}`} entry={entry} maxTotal={maxBidTotal} side="bid" />
